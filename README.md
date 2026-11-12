@@ -1,5 +1,5 @@
 # AEFP
 
-Our paper has been submitted for publication. The code and pretrained weights are being prepared for release.
+Our paper has been submitted for publication. The core code is now available in [`methods/`](methods/).
 
-The arXiv preprint and code will be publicly available within one week of this announcement.
+The arXiv preprint, remaining code, and pretrained weights will be made publicly available progressively within one week of the initial announcement.
