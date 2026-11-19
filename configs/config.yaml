@@ -1,0 +1,29 @@
+defaults:
+  - dataset@dataset: mnist # mnist, cifar10, celeba-hq-64, celeba-hq-256
+  - model@model: resae_3down
+  - degradation@degradation: sparse # sparse, inpainting, block_inpainting, deblurring
+  - inference@inference: jinit # direct, jinit, feedforward
+  - _self_
+
+# Priority: user override > dataset defaults > ae.yaml defaults > code fallback.
+train: {}
+
+# Seed fresh training; validation/test degradations retain their per-index seeds.
+seed: 42
+
+output:
+  checkpoint_root: checkpoints/image_ae
+  hydra_subdir: sparse_restoration
+
+reconstruction:
+  eval_num_samples: 100
+  batch_size: 128
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: outputs/${output.hydra_subdir}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: outputs/${output.hydra_subdir}/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

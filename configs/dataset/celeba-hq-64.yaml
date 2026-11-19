@@ -1,0 +1,8 @@
+# @package _group_
+name: celeba-hq-64
+source_name: celeba-hq-256
+channels: 3
+size: 64
+dataset_defaults:
+  train:
+    train_batch_size: 64

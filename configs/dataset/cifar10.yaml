@@ -1,0 +1,7 @@
+# @package _group_
+name: cifar10
+channels: 3
+size: 32
+dataset_defaults:
+  train:
+    train_batch_size: 64

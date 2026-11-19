@@ -1,0 +1,586 @@
+# Sparse-restoration presets by method, dataset, and corruption level.
+version: paper-v4
+method_defaults:
+  irae:
+    max_iteration: 100
+    jinit_stage_iters:
+    - 100
+    - 100
+    - 100
+    is_lambda_update: true
+    lambda_multiplier: 0.8
+    lambda_check_interval: 10
+    lambda_init_gamma: 1.0
+    backtracking_rule: sufficient_decrease
+    sufficient_decrease_constant: 0.0001
+  rpca: {}
+  daep: {}
+  dpir: {}
+  dps:
+    seed: 42
+  fire-single:
+    seed: 42
+    max_iter: 100
+    avg_gdsteps: 1
+    equivariant: true
+    average_last: false
+  fire-multi:
+    seed: 42
+    max_iter: 100
+    avg_gdsteps: 1
+    equivariant: true
+    average_last: false
+    prior_weights:
+    - 0.8
+    - 0.2
+presets:
+  ae/mnist/salt_pepper_r0p1_per_channel_seed42: &id001
+    model_id: ae-mnist-v4
+    output_stage: direct
+    execution_batch_size: 128
+    batch_semantics: independent
+  ae/mnist/salt_pepper_r0p2_per_channel_seed42: *id001
+  ae/mnist/salt_pepper_r0p3_per_channel_seed42: *id001
+  ae/cifar10/salt_pepper_r0p1_per_channel_seed42: &id002
+    model_id: ae-cifar10-v4
+    output_stage: direct
+    execution_batch_size: 64
+    batch_semantics: independent
+  ae/cifar10/salt_pepper_r0p2_per_channel_seed42: *id002
+  ae/cifar10/salt_pepper_r0p3_per_channel_seed42: *id002
+  ae/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42: &id003
+    model_id: ae-celeba-hq-64-v4
+    output_stage: direct
+    execution_batch_size: 64
+    batch_semantics: independent
+  ae/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42: *id003
+  ae/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42: *id003
+  irae/mnist/salt_pepper_r0p1_per_channel_seed42:
+    model_id: ae-mnist-v4
+    lambda: 0.07
+    solver: jinit
+    execution_batch_size: 128
+    batch_semantics: independent
+  irae/mnist/salt_pepper_r0p2_per_channel_seed42:
+    model_id: ae-mnist-v4
+    lambda: 0.04
+    solver: jinit
+    execution_batch_size: 128
+    batch_semantics: independent
+  irae/mnist/salt_pepper_r0p3_per_channel_seed42:
+    model_id: ae-mnist-v4
+    lambda: 0.04
+    solver: jinit
+    execution_batch_size: 128
+    batch_semantics: independent
+  irae/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    model_id: ae-cifar10-v4
+    lambda: 0.04
+    solver: jinit
+    execution_batch_size: 64
+    batch_semantics: independent
+  irae/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    model_id: ae-cifar10-v4
+    lambda: 0.01
+    solver: jinit
+    execution_batch_size: 64
+    batch_semantics: independent
+  irae/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    model_id: ae-cifar10-v4
+    lambda: 0.01
+    solver: jinit
+    execution_batch_size: 64
+    batch_semantics: independent
+  irae/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    model_id: ae-celeba-hq-64-v4
+    lambda: 0.05
+    solver: jinit
+    execution_batch_size: 64
+    batch_semantics: independent
+  irae/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    model_id: ae-celeba-hq-64-v4
+    lambda: 0.03
+    solver: jinit
+    execution_batch_size: 64
+    batch_semantics: independent
+  irae/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    model_id: ae-celeba-hq-64-v4
+    lambda: 0.02
+    solver: jinit
+    execution_batch_size: 64
+    batch_semantics: independent
+  rpca/mnist/salt_pepper_r0p1_per_channel_seed42:
+    lambda_mult: 1.75
+    execution_batch_size: 128
+    batch_semantics: independent
+  rpca/mnist/salt_pepper_r0p2_per_channel_seed42:
+    lambda_mult: 1.5
+    execution_batch_size: 128
+    batch_semantics: independent
+  rpca/mnist/salt_pepper_r0p3_per_channel_seed42:
+    lambda_mult: 1.375
+    execution_batch_size: 128
+    batch_semantics: independent
+  rpca/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    lambda_mult: 1.25
+    execution_batch_size: 128
+    batch_semantics: independent
+  rpca/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    lambda_mult: 1.0
+    execution_batch_size: 128
+    batch_semantics: independent
+  rpca/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    lambda_mult: 0.875
+    execution_batch_size: 128
+    batch_semantics: independent
+  rpca/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    lambda_mult: 1.25
+    execution_batch_size: 32
+    batch_semantics: independent
+  rpca/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    lambda_mult: 1.125
+    execution_batch_size: 32
+    batch_semantics: independent
+  rpca/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    lambda_mult: 1.0
+    execution_batch_size: 32
+    batch_semantics: independent
+  daep/mnist/salt_pepper_r0p1_per_channel_seed42:
+    model_id: daep-mnist-v4
+    prior_strength: 100
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 128
+    batch_semantics: independent
+  daep/mnist/salt_pepper_r0p2_per_channel_seed42:
+    model_id: daep-mnist-v4
+    prior_strength: 130
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 128
+    batch_semantics: independent
+  daep/mnist/salt_pepper_r0p3_per_channel_seed42:
+    model_id: daep-mnist-v4
+    prior_strength: 160
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 128
+    batch_semantics: independent
+  daep/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    model_id: daep-cifar10-v4
+    prior_strength: 50
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 64
+    batch_semantics: independent
+  daep/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    model_id: daep-cifar10-v4
+    prior_strength: 80
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 64
+    batch_semantics: independent
+  daep/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    model_id: daep-cifar10-v4
+    prior_strength: 160
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 64
+    batch_semantics: independent
+  daep/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    model_id: daep-celeba-hq-64-v4
+    prior_strength: 60
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 32
+    batch_semantics: independent
+  daep/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    model_id: daep-celeba-hq-64-v4
+    prior_strength: 130
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 32
+    batch_semantics: independent
+  daep/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    model_id: daep-celeba-hq-64-v4
+    prior_strength: 200
+    alpha: 0.1
+    mu: 0.9
+    num_iter: 300
+    seed: 0
+    execution_batch_size: 32
+    batch_semantics: independent
+  dpir/mnist/salt_pepper_r0p1_per_channel_seed42:
+    model_id: drunet-mnist-ep40
+    lambda: 7
+    mu0: 8
+    mu_rho: 1.45
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 128
+    batch_semantics: independent
+  dpir/mnist/salt_pepper_r0p2_per_channel_seed42:
+    model_id: drunet-mnist-ep40
+    lambda: 5
+    mu0: 8
+    mu_rho: 1.3
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 128
+    batch_semantics: independent
+  dpir/mnist/salt_pepper_r0p3_per_channel_seed42:
+    model_id: drunet-mnist-ep40
+    lambda: 3
+    mu0: 8
+    mu_rho: 1.25
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 128
+    batch_semantics: independent
+  dpir/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    model_id: drunet-cifar10-ep40
+    lambda: 18
+    mu0: 48
+    mu_rho: 1.48
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 64
+    batch_semantics: independent
+  dpir/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    model_id: drunet-cifar10-ep40
+    lambda: 10
+    mu0: 32
+    mu_rho: 1.36
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 64
+    batch_semantics: independent
+  dpir/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    model_id: drunet-cifar10-ep40
+    lambda: 8
+    mu0: 16
+    mu_rho: 1.42
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 64
+    batch_semantics: independent
+  dpir/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    model_id: drunet-celeba-hq-64-ep40
+    lambda: 22
+    mu0: 16
+    mu_rho: 2.2
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 32
+    batch_semantics: independent
+  dpir/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    model_id: drunet-celeba-hq-64-ep40
+    lambda: 9
+    mu0: 24
+    mu_rho: 1.45
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 32
+    batch_semantics: independent
+  dpir/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    model_id: drunet-celeba-hq-64-ep40
+    lambda: 9
+    mu0: 8
+    mu_rho: 2.0
+    iter_num: 8
+    x8: true
+    seed: 42
+    execution_batch_size: 32
+    batch_semantics: independent
+  dps/mnist/salt_pepper_r0p1_per_channel_seed42:
+    model_id: dps-mnist-v4
+    scale: 0.8
+    timestep_respacing: 100
+    execution_batch_size: 1
+    batch_semantics: gradient_coupled
+  dps/mnist/salt_pepper_r0p2_per_channel_seed42:
+    model_id: dps-mnist-v4
+    scale: 0.6
+    timestep_respacing: 100
+    execution_batch_size: 1
+    batch_semantics: gradient_coupled
+  dps/mnist/salt_pepper_r0p3_per_channel_seed42:
+    model_id: dps-mnist-v4
+    scale: 0.5
+    timestep_respacing: 100
+    execution_batch_size: 1
+    batch_semantics: gradient_coupled
+  dps/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    model_id: dps-cifar10-v4
+    scale: 18
+    timestep_respacing: 100
+    execution_batch_size: 64
+    batch_semantics: gradient_coupled
+  dps/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    model_id: dps-cifar10-v4
+    scale: 15
+    timestep_respacing: 100
+    execution_batch_size: 64
+    batch_semantics: gradient_coupled
+  dps/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    model_id: dps-cifar10-v4
+    scale: 12
+    timestep_respacing: 100
+    execution_batch_size: 64
+    batch_semantics: gradient_coupled
+  dps/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    model_id: dps-celeba-hq-64-v4
+    scale: 22
+    timestep_respacing: 100
+    execution_batch_size: 32
+    batch_semantics: gradient_coupled
+  dps/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    model_id: dps-celeba-hq-64-v4
+    scale: 18
+    timestep_respacing: 100
+    execution_batch_size: 32
+    batch_semantics: gradient_coupled
+  dps/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    model_id: dps-celeba-hq-64-v4
+    scale: 16
+    timestep_respacing: 100
+    execution_batch_size: 32
+    batch_semantics: gradient_coupled
+  fire-single/mnist/salt_pepper_r0p1_per_channel_seed42:
+    model_id: fire-drunet-mnist-ep40
+    sigma_noise_max: 0.2
+    lambda: 0.02
+    gamma: 0.2
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/mnist/salt_pepper_r0p2_per_channel_seed42:
+    model_id: fire-drunet-mnist-ep40
+    sigma_noise_max: 0.2
+    lambda: 0.04
+    gamma: 0.4
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/mnist/salt_pepper_r0p3_per_channel_seed42:
+    model_id: fire-drunet-mnist-ep40
+    sigma_noise_max: 0.2
+    lambda: 0.04
+    gamma: 0.45
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    model_id: fire-drunet-cifar10-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.015
+    gamma: 0.3
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    model_id: fire-drunet-cifar10-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.01
+    gamma: 0.3
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    model_id: fire-drunet-cifar10-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.02
+    gamma: 0.5
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    model_id: fire-drunet-celeba-hq-64-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.01
+    gamma: 0.3
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 32
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    model_id: fire-drunet-celeba-hq-64-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.015
+    gamma: 0.5
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 32
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-single/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    model_id: fire-drunet-celeba-hq-64-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.015
+    gamma: 0.5
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 32
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 1.0
+  fire-multi/mnist/salt_pepper_r0p1_per_channel_seed42:
+    model_ids: &id004
+    - fire-drunet-mnist-ep40
+    - fire-swinir-mnist-ep40
+    sigma_noise_max: 0.2
+    lambda: 0.01
+    gamma: 0.12
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/mnist/salt_pepper_r0p2_per_channel_seed42:
+    model_ids: *id004
+    sigma_noise_max: 0.2
+    lambda: 0.0175
+    gamma: 0.25
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/mnist/salt_pepper_r0p3_per_channel_seed42:
+    model_ids: *id004
+    sigma_noise_max: 0.2
+    lambda: 0.04
+    gamma: 0.55
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/cifar10/salt_pepper_r0p1_per_channel_seed42:
+    model_ids: &id005
+    - fire-drunet-cifar10-ep40
+    - fire-swinir-cifar10-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.01
+    gamma: 0.25
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/cifar10/salt_pepper_r0p2_per_channel_seed42:
+    model_ids: *id005
+    sigma_noise_max: 0.08
+    lambda: 0.009
+    gamma: 0.25
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/cifar10/salt_pepper_r0p3_per_channel_seed42:
+    model_ids: *id005
+    sigma_noise_max: 0.08
+    lambda: 0.0125
+    gamma: 0.35
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 64
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/celeba-hq-64/salt_pepper_r0p1_per_channel_seed42:
+    model_ids: &id006
+    - fire-drunet-celeba-hq-64-ep40
+    - fire-swinir-celeba-hq-64-ep40
+    sigma_noise_max: 0.08
+    lambda: 0.01
+    gamma: 0.3
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 32
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/celeba-hq-64/salt_pepper_r0p2_per_channel_seed42:
+    model_ids: *id006
+    sigma_noise_max: 0.08
+    lambda: 0.01
+    gamma: 0.35
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 32
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+  fire-multi/celeba-hq-64/salt_pepper_r0p3_per_channel_seed42:
+    model_ids: *id006
+    sigma_noise_max: 0.08
+    lambda: 0.015
+    gamma: 0.5
+    max_iter: 100
+    avg_gdsteps: 1
+    execution_batch_size: 32
+    batch_semantics: rng_grouped
+    prior_weights:
+    - 0.8
+    - 0.2
+baseline_integration: baselines_20260929

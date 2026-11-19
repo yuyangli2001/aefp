@@ -1,0 +1,10 @@
+# @package _group_
+family: ae
+variant: resconv
+params:
+  stage_channels: [32, 64, 128, 256]
+  blocks_per_stage: [1, 2, 2, 2]
+  bottleneck_channels: 32
+  norm_type: gn
+  gn_groups: 8
+  upsample_mode: deconv

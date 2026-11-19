@@ -1,0 +1,7 @@
+# @package _group_
+mode: deblurring
+params:
+  blur_kernel_size: 17
+  blur_sigma: 2.0
+  blur_padding_mode: reflect
+  obs_noise_std: 0.03

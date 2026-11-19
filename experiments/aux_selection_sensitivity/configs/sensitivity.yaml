@@ -1,0 +1,66 @@
+# Recovery uses checkpoint stages selected on clean validation images.
+grid:
+  delta_c:
+  - 8
+  - 10
+  - 13
+  - 14
+  delta_f:
+  - 3
+  - 5
+  - 8
+  default:
+  - 10
+  - 5
+degradation:
+  mode: sparse
+  ratio: 0.2
+  seed: 42
+  value_mode: salt_pepper
+  per_channel: true
+recovery:
+  jinit_stage_iters:
+  - 100
+  - 100
+  - 100
+  is_lambda_update: true
+  lambda_init_gamma: 1.0
+  lambda_check_interval: 10
+  lambda_multiplier: 0.8
+  backtracking_rule: sufficient_decrease
+  sufficient_decrease_constant: 0.0001
+datasets:
+  mnist:
+    model_id: ae-mnist-v4
+    recovery_batch_size: 128
+    lambda: 0.04
+    selected_stages:
+      3: 8
+      5: 9
+      8: 10
+      10: 11
+      13: 12
+      14: 12
+  cifar10:
+    model_id: ae-cifar10-v4
+    recovery_batch_size: 64
+    lambda: 0.01
+    selected_stages:
+      3: 5
+      5: 6
+      8: 7
+      10: 8
+      13: 9
+      14: 9
+  celeba-hq-64:
+    model_id: ae-celeba-hq-64-v4
+    recovery_batch_size: 64
+    lambda: 0.03
+    selected_stages:
+      3: 4
+      5: 5
+      8: 6
+      10: 7
+      13: 8
+      14: 9
+checkpoint_manifest: recovery/presets/checkpoints.yaml

@@ -1,0 +1,18 @@
+# Shared training settings.
+learning_rate: 1e-4
+train_batch_size: 64
+train_subset_size: null
+num_workers: null
+force_retrain: false
+
+# Train the original AE shared by all recovery methods.
+original:
+  epochs: 200
+
+# Fine-tune candidates and select auxiliary AEs on the complete clean validation split.
+auxiliary:
+  psnr_drops: [10.0, 5.0] # coarse, fine
+  jacobian_weight_init: 1e-8
+  jacobian_weight_multiplier: 3.0
+  epochs_per_candidate: 30
+  max_candidates: 14

@@ -1,0 +1,12 @@
+# @package _group_
+# Optional plain convolutional AE with three downsampling stages.
+family: ae
+variant: conv
+params:
+  downsample_indices: [1, 3, 5]
+  encoder_channels: [32, 32, 64, 64, 128, 128, 128, 128, 128]
+  bottleneck_channels: 16
+  bottleneck_mode: conv
+  norm_type: gn
+  use_sn: false
+  upsample_mode: deconv # resize_conv, deconv

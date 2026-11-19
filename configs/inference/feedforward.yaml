@@ -1,0 +1,5 @@
+# @package inference
+solver: feedforward
+split: val
+num_samples: 512
+batch_size: 128

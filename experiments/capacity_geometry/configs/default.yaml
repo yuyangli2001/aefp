@@ -1,0 +1,29 @@
+# Keep scientific settings separate from execution and storage settings.
+test_count: 256
+test_seed: 31001
+validation_count: 20
+validation_seed: 31002
+batch_size: 128
+init_seeds: [4200, 4201]
+alpha: 0.25
+beta: 0.05
+sparse:
+  mode: sparse
+  ratio: 0.1
+  value_mode: salt_pepper
+  per_channel: true
+  seed: 42
+solver:
+  lambda_: 0.07
+  is_lambda_update: true
+  lambda_multiplier: 0.8
+  lambda_check_interval: 10
+  max_iteration: 100
+  backtracking_rule: sufficient_decrease
+  sufficient_decrease_constant: 0.0001
+chunk_size: 16
+cpu_threads: 4
+data_root: null
+models: experiments/capacity_geometry/configs/models.yaml
+epsilon: 0.1
+jacobian_dtype: float32

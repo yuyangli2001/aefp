@@ -1,0 +1,7 @@
+# @package _group_
+mode: inpainting
+params:
+  mask_ratio: 0.16
+  mask_mode: center_box # bernoulli | center_box
+  mask_seed: 42
+  mask_per_channel: false

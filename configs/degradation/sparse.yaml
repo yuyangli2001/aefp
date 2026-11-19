@@ -1,0 +1,4 @@
+# @package _group_
+mode: sparse
+params:
+  noise_ratio: 0.1

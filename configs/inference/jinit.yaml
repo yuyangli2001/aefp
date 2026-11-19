@@ -1,0 +1,19 @@
+# @package inference
+solver: jinit
+lambda_init: 0.1
+update_lambda: true
+split: val
+num_samples: null
+batch_size: 128
+stage_iterations: [100, 100, 100]
+aux_lambda_scale: 1.0
+lambda_multiplier: 0.8
+lambda_update_interval: 10
+backtracking_rule: sufficient_decrease
+sufficient_decrease_constant: 1.0e-4
+# Sparse PGD keeps its searched lambda schedule:
+# Warm-up is fixed at 30 iterations in the solver; the update interval is configured above.
+# Positive multipliers support decreasing, fixed, and increasing lambda schedules.
+# Observation noise remains a degradation parameter and never rescales lambda.
+
+init_method: observation

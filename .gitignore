@@ -1,0 +1,34 @@
+# Local records, datasets and experiment artifacts.
+/baselines/
+/agent/
+/AGENTS.md
+/archive/
+/records/
+/ref_paper/
+/datasets/*
+!/datasets/README.md
+/checkpoints/*
+!/checkpoints/README.md
+outputs/
+
+# Python caches and model weights.
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+*.pt
+*.pth
+*.ckpt
+
+# Local upstream references.
+ref/
+
+# Local environments, credentials and editor settings.
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+.vscode/
+.idea/
+*.log

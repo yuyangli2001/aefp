@@ -1,0 +1,15 @@
+# @package inference
+solver: direct
+# Share the original checkpoint with FF-AE and AEFP; no auxiliary preparation.
+lambda_init: 0.1
+update_lambda: true
+lambda_multiplier: 0.8
+lambda_update_interval: 10
+backtracking_rule: sufficient_decrease
+sufficient_decrease_constant: 1.0e-4
+split: val
+num_samples: 512
+batch_size: 128
+max_iterations: 100
+
+init_method: observation # observation, clean (diagnostics only)

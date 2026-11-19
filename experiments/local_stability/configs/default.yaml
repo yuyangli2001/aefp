@@ -1,0 +1,19 @@
+# Reuse the exact capacity-study inputs and independently trained original models.
+source_run: outputs/capacity_geometry
+split: test
+dimensions: [16, 96, 512]
+model_seeds: [2, 1024, 2026]
+num_anchors: null  # null uses the entire cached split: 256 test or 20 validation images.
+anchor_seed: 32001
+
+# Each radius is an L2 displacement divided by the square root of the input size.
+radii: [0.00035714285714285714, 0.001]
+num_directions: 4  # Two Gaussian unit axes, each evaluated with both signs.
+direction_seed: 32002
+epsilon: 0.1
+# Compute statistics at these thresholds. The summary table uses epsilon above.
+thresholds: [0.1]
+
+# Ambient perturbations are not clipped. Jacobians and SVDs use float64.
+chunk_size: 16
+cpu_threads: 4

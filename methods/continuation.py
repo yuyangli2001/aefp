@@ -10,17 +10,13 @@ import torch
 import torch.nn as nn
 
 from methods.irae_solver import (
+    _default_device,
     irae_deblurring_l2_gd,
     irae_inpainting_l2_gd,
     irae_sparse_l1_pgd,
 )
 
 Tensor = torch.Tensor
-
-
-# Small input helpers keep experiment metadata out of the numerical core.
-def _default_device(device: Optional[torch.device]) -> torch.device:
-    return device if device is not None else torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def _normalize_mode(mode: Any) -> str:
@@ -44,9 +40,12 @@ def _require_tensor(value: Any, name: str, device: torch.device) -> Tensor:
 
 
 def _validate_solver_input_range(value: Tensor, name: str) -> None:
-    if value.ndim != 4 or value.numel() == 0 or not value.is_floating_point() or not torch.isfinite(value).all():
+    if value.ndim != 4 or value.numel() == 0 or not value.is_floating_point():
         raise ValueError(f"{name} must be a finite, nonempty floating-point BCHW tensor.")
+    value = value.detach()
     value_min, value_max = float(value.min()), float(value.max())
+    if not math.isfinite(value_min) or not math.isfinite(value_max):
+        raise ValueError(f"{name} must be a finite, nonempty floating-point BCHW tensor.")
     if value_min < -0.5 or value_max > 1.5:
         raise ValueError(
             f"Required input range check failed for {name}: expected values near [0,1], "
@@ -55,27 +54,18 @@ def _validate_solver_input_range(value: Tensor, name: str) -> None:
 
 
 def _format_history_result(result) -> Dict[str, Any]:
-    reconstruction = torch.clamp(result[0], 0.0, 1.0)
-    history = list(result[1]) if len(result) > 1 and result[1] else result[1]
-    if history:
-        history[-1] = reconstruction.detach().cpu().clone()
+    reconstruction, trajectory, metrics = result
+    reconstruction = reconstruction.clamp(0.0, 1.0)
+    history = list(trajectory)
+    history[-1] = reconstruction.detach().cpu().clone()
     return {
         "reconstruction": reconstruction,
         "history": history,
-        "history_metrics": result[2] if len(result) > 2 else None,
+        "history_metrics": metrics,
     }
 
 
-def _validate_three(values: Optional[Sequence[Any]], name: str) -> Optional[list]:
-    if values is None:
-        return None
-    values = list(values)
-    if len(values) != 3:
-        raise ValueError(f"solver='jinit' requires exactly 3 {name}, got {len(values)}.")
-    return values
-
-
-# Direct recovery dispatches one batch to the matching paper data discrepancy.
+# Choose the data term for the batch's degradation mode.
 def irae_direct(
     *,
     observation: Tensor,
@@ -94,10 +84,13 @@ def irae_direct(
     return_history: bool = False,
 ):
     device = _default_device(device)
+    if x_init is observation:
+        x_init = None
     observation = observation.to(device)
-    x_init = observation if x_init is None else x_init.to(device)
     _validate_solver_input_range(observation, "observation")
-    _validate_solver_input_range(x_init, "x_init")
+    if x_init is not None:
+        x_init = x_init.to(device)
+        _validate_solver_input_range(x_init, "x_init")
 
     degradation = dict(degradation or {})
     mode = _normalize_mode(degradation.get("mode", "sparse"))
@@ -161,7 +154,9 @@ def irae_jinit(
     models = list(ae_models)
     if len(models) != 3:
         raise ValueError(f"solver='jinit' requires exactly 3 AE models, got {len(models)}.")
-    iterations = _validate_three(stage_iterations, "stage iterations") or [integer_index(max_iteration)] * 3
+    iterations = list(stage_iterations) if stage_iterations is not None else [max_iteration] * 3
+    if len(iterations) != 3:
+        raise ValueError(f"solver='jinit' requires exactly 3 stage iterations, got {len(iterations)}.")
     iterations = [integer_index(value) for value in iterations]
     if any(value < 0 for value in iterations):
         raise ValueError("stage iterations must be non-negative.")
@@ -212,7 +207,7 @@ def irae_solver(
     ae_models: Optional[Sequence[nn.Module]] = None,
     **kwargs,
 ):
-    """Run the active paper solver mode: ``direct`` or ``jinit``."""
+    """Run recovery with one autoencoder or a three-stage sequence."""
     solver = str(solver).strip().lower()
     if solver == "direct":
         if ae_model is None:

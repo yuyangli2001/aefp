@@ -1,0 +1,115 @@
+version: paper-v4
+models:
+  ae-mnist-v4:
+    path: checkpoints/image_ae/mnist/resconv_sch32-64-128-256_bps1-2-2-2_bc6_normgn_updeconv_pjinit_dep200_dl10p0_jsw1em08_jep30_jgf3p0_jmc14_jl10p0_lr0p0001_bs128
+    architecture:
+      model_config: resae_3down
+      stage_channels:
+      - 32
+      - 64
+      - 128
+      - 256
+      bottleneck_channels: 6
+      norm_type: gn
+      upsample_mode: deconv
+    stage_paths:
+    - jinit/psnr_drops_10p0-5p0/stage_1.pth
+    - jinit/psnr_drops_10p0-5p0/stage_2.pth
+    - direct/stage_1.pth
+    availability: local
+  ae-cifar10-v4:
+    path: checkpoints/image_ae/cifar10/resconv_sch32-64-128_bps1-2-2_bc20_normgn_updeconv_pjinit_dep200_dl10p0_jsw1em08_jep30_jgf3p0_jmc14_jl10p0_lr0p0001_bs64
+    architecture:
+      model_config: resae_2down
+      stage_channels:
+      - 32
+      - 64
+      - 128
+      bottleneck_channels: 20
+      norm_type: gn
+      upsample_mode: deconv
+    stage_paths:
+    - jinit/psnr_drops_10p0-5p0/stage_1.pth
+    - jinit/psnr_drops_10p0-5p0/stage_2.pth
+    - direct/stage_1.pth
+    availability: local
+  ae-celeba-hq-64-v4:
+    path: checkpoints/image_ae/celeba-hq-64/resconv_sch32-64-128_bps1-2-2_bc20_normgn_updeconv_pjinit_dep200_dl10p0_jsw1em08_jep30_jgf3p0_jmc14_jl10p0_lr0p0001_bs64
+    architecture:
+      model_config: resae_2down
+      stage_channels:
+      - 32
+      - 64
+      - 128
+      bottleneck_channels: 20
+      norm_type: gn
+      upsample_mode: deconv
+    stage_paths:
+    - jinit/psnr_drops_10p0-5p0/stage_1.pth
+    - jinit/psnr_drops_10p0-5p0/stage_2.pth
+    - direct/stage_1.pth
+    availability: local
+  daep-mnist-v4:
+    path: checkpoints/baselines/daep/daep_l1_adapted/mnist/best.pth
+    architecture: daep_sigma25_gray
+  daep-cifar10-v4:
+    path: checkpoints/baselines/daep/daep_l1_adapted/cifar10/best.pth
+    architecture: daep_sigma25_color
+  daep-celeba-hq-64-v4:
+    path: checkpoints/baselines/daep/daep_l1_adapted/celeba-hq-64/best.pth
+    architecture: daep_sigma25_color
+  drunet-mnist-ep40:
+    path: checkpoints/baselines/dpir/drunet_gray_mnist_full_train_ep40.pth
+    architecture: drunet_gray
+    epoch: 40
+  drunet-cifar10-ep40:
+    path: checkpoints/baselines/dpir/drunet_color_cifar10_full_train_ep40.pth
+    architecture: drunet_color
+    epoch: 40
+  drunet-celeba-hq-64-ep40:
+    path: checkpoints/baselines/dpir/drunet_color_celeba-hq-64_full_train_ep40.pth
+    architecture: drunet_color
+    epoch: 40
+  dps-mnist-v4:
+    path: checkpoints/baselines/dps/mnist_prior/mnist_prior_epoch50.pt
+    architecture: ddpm_mnist
+    epoch: 50
+    config_files:
+    - path: baselines/dps_04/configs/mnist_model_config.yaml
+    - path: baselines/dps_04/configs/prior_sample_diffusion_config.yaml
+  dps-cifar10-v4:
+    path: checkpoints/baselines/dps/cifar10_prior/ema_best_model.pt
+    architecture: ddpm_cifar10
+    config_files:
+    - path: baselines/dps_04/configs/cifar10_model_config.yaml
+    - path: baselines/dps_04/configs/prior_sample_diffusion_config.yaml
+  dps-celeba-hq-64-v4:
+    path: checkpoints/baselines/dps/celeba-hq-64_prior/ema_best_model.pt
+    architecture: ddpm_celeba64
+    config_files:
+    - path: baselines/dps_04/configs/celeba_hq_64_model_config.yaml
+    - path: baselines/dps_04/configs/prior_sample_diffusion_config.yaml
+  fire-drunet-mnist-ep40:
+    path: checkpoints/baselines/fire/drunet_gray_mnist_full_train_ep40.pth
+    architecture: drunet_gray
+    epoch: 40
+  fire-drunet-cifar10-ep40:
+    path: checkpoints/baselines/fire/drunet_color_cifar10_full_train_ep40.pth
+    architecture: drunet_color
+    epoch: 40
+  fire-drunet-celeba-hq-64-ep40:
+    path: checkpoints/baselines/fire/drunet_color_celeba-hq-64_full_train_ep40.pth
+    architecture: drunet_color
+    epoch: 40
+  fire-swinir-mnist-ep40:
+    path: checkpoints/baselines/fire/SwinIR_2x_mnist_full_train_ep40.pth
+    architecture: swinir_2x_gray_adapter
+    epoch: 40
+  fire-swinir-cifar10-ep40:
+    path: checkpoints/baselines/fire/SwinIR_2x_cifar10_full_train_ep40.pth
+    architecture: swinir_2x_color
+    epoch: 40
+  fire-swinir-celeba-hq-64-ep40:
+    path: checkpoints/baselines/fire/SwinIR_2x_celeba-hq-64_full_train_ep40.pth
+    architecture: swinir_2x_color
+    epoch: 40

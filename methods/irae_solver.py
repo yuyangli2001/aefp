@@ -46,11 +46,16 @@ def _prepare_model(model: torch.nn.Module, device: torch.device) -> torch.nn.Mod
 
 
 def _prepare_inputs(observation: Tensor, x_init: Optional[Tensor], device: torch.device) -> tuple[Tensor, Tensor]:
+    if x_init is observation:
+        x_init = None
     observation = observation.to(device)
-    initial = observation if x_init is None else x_init.to(device)
-    for name, value in (("observation", observation), ("x_init", initial)):
+    inputs = {"observation": observation}
+    if x_init is not None:
+        inputs["x_init"] = x_init.to(device)
+    for name, value in inputs.items():
         if value.ndim != 4 or value.numel() == 0 or not value.is_floating_point() or not torch.isfinite(value).all():
             raise ValueError(f"{name} must be a finite, nonempty floating-point BCHW tensor.")
+    initial = inputs.get("x_init", observation)
     if initial.shape != observation.shape:
         raise ValueError("x_init must have the same shape as observation.")
     return observation, initial.detach().clone().requires_grad_(True)
@@ -95,7 +100,6 @@ def _multiply_lambda(lambda_: float, multiplier: float) -> float:
     return updated
 
 
-# Sparse L1 PGD is intentionally kept numerically identical to the searched implementation.
 @full_precision()
 def irae_sparse_l1_pgd(
     observation: Tensor,
@@ -149,8 +153,7 @@ def irae_sparse_l1_pgd(
                 lambda_ = updated_lambda
                 if DEBUG:
                     print(f"  --> updated lambda_ to {lambda_:.4e} at iter {iteration}")
-                # Sparse proximal updates retain the conservative step reset used by its searched schedule.
-                # The smooth linear solver below instead carries its accepted step across lambda changes.
+                # Cap the step size whenever the proximal threshold changes.
                 t = min(_T_INIT, t)
 
         reconstruction = ae_model(x)
@@ -178,7 +181,6 @@ def irae_sparse_l1_pgd(
         grad_x = x.grad.detach().clone()
         if not torch.isfinite(grad_x).all():
             raise FloatingPointError("Sparse-L1 gradient is not finite.")
-        grad_norm = torch.norm(grad_x, p=2)
 
         with torch.no_grad():
             t_current = t
@@ -191,11 +193,11 @@ def irae_sparse_l1_pgd(
                 reconstruction_candidate = ae_model(x_candidate)
                 recon_candidate = 0.5 * ((x_candidate - reconstruction_candidate) ** 2).sum()
                 data_candidate = lambda_ * torch.norm(observation - x_candidate, p=1)
-                # Preserve the legacy test for reproduction; the default rule certifies composite decrease.
+                # Monotone backtracking accepts any nonincrease in the objective.
                 if backtracking_rule == "monotone":
                     accepted = recon_candidate + data_candidate <= objective_current
                 else:
-                    # This is exactly the paper's proximal Armijo sufficient-decrease rule.
+                    # Sufficient decrease scales with the squared update divided by the step size.
                     delta_sq = (x_candidate - x).square().sum()
                     required_decrease = sufficient_decrease_constant * delta_sq / (2.0 * t_current)
                     accepted = recon_candidate + data_candidate <= objective_current - required_decrease
@@ -222,6 +224,7 @@ def irae_sparse_l1_pgd(
         if return_history:
             history_x.append(x.detach().cpu().clone())
         if DEBUG and (iteration % 10 == 0 or iteration == max_iteration - 1):
+            grad_norm = torch.norm(grad_x, p=2)
             recon_loss = ((x - ae_model(x)) ** 2).sum().item()
             l1_loss = torch.norm(observation - x, p=1).item()
             print(
@@ -290,8 +293,7 @@ def irae_linear_l2_gd(
             if updated_lambda != lambda_:
                 lambda_ = updated_lambda
                 lambda_updated = True
-                # Unlike sparse proximal PGD, smooth linear GD keeps the accepted step.
-                # Armijo backtracking revalidates it against the newly weighted objective.
+                # Check the current step against the newly weighted objective.
                 if DEBUG:
                     print(f"  --> updated lambda_ to {lambda_:.4e} at iter {iteration}")
 
@@ -320,7 +322,6 @@ def irae_linear_l2_gd(
         if not torch.isfinite(grad_x).all():
             raise FloatingPointError("Linear-L2 gradient is not finite.")
         grad_sq = grad_x.square().sum()
-        grad_norm = torch.sqrt(grad_sq)
 
         with torch.no_grad():
             t_current = t
@@ -346,6 +347,7 @@ def irae_linear_l2_gd(
         if return_history:
             history_x.append(x.detach().cpu().clone())
         if DEBUG and (iteration % 10 == 0 or iteration == max_iteration - 1):
+            grad_norm = torch.sqrt(grad_sq)
             print(
                 f"Linear-L2 GD iter {iteration}: obj={objective_detached.item():.4f}, "
                 f"recon_loss={(2 * recon_term).item():.4f}, "
@@ -363,7 +365,7 @@ def irae_linear_l2_gd(
     return x.detach()
 
 
-# Inpainting supplies the paper's raw masked L2 discrepancy.
+# Use the binary observation mask as the forward operator in the L2 data term.
 def irae_inpainting_l2_gd(
     observation: Tensor,
     mask: Tensor,
@@ -461,7 +463,7 @@ def irae_deblurring_l2_gd(
     return_history: bool = False,
     padding_mode: str = "reflect",
 ):
-    """Use the paper's raw non-blind deblurring L2 discrepancy."""
+    """Use the supplied blur kernel as the forward operator in the L2 data term."""
     return irae_linear_l2_gd(
         observation=observation,
         ae_model=ae_model,
